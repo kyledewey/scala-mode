@@ -168,12 +168,12 @@
         ((= (char-after) ?\()
          ;; Function type (several arguments)
          (forward-sexp)
-         (scala-when-looking-at "\\s *=>\\s *" (scala-forward-type))
+         (scala-when-looking-at "\\s *\(=>|⇒\)\\s *" (scala-forward-type))
          t)
         (t
          ;; Type1 or function type with one argument
          (scala-forward-type1)
-         (scala-when-looking-at "\\s *=>\\s *" (scala-forward-type))
+         (scala-when-looking-at "\\s *\(=>|⇒\)\\s *" (scala-forward-type))
          t)))
 
 (defun scala-forward-type-param ()
