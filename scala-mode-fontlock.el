@@ -68,7 +68,7 @@
     (cons start-mark (cons end-mark markers))))
 
 (defconst scala-binding-end-re
-  (regexp-opt '(":" "=" "=>" "⇒" ";" "<-")))
+  (regexp-opt '(":" "=" "=>" "⇒" ";" "<-" "←")))
 
 (defun scala-match-and-skip-binding (limit)
   (skip-chars-forward " ()")
@@ -117,7 +117,7 @@
   (regexp-opt '("if" "case" "class") 'words))
 
 (defconst scala-pattern-end-special-re
-  (regexp-opt '( "=>" "⇒" "=" "<-") t))
+  (regexp-opt '( "=>" "⇒" "=" "<-" "←") t))
 
 (defun scala-match-and-skip-pattern (limit)
   (while (progn
