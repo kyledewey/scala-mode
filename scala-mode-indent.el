@@ -1,35 +1,36 @@
-;;; scala-mode-indent.el --- Indentation support for Scala.
+;;; -*-Emacs-Lisp-*-
+;;; scala-mode-indent.el - 
 
-;; Copyright (C) 2009 Scala Dev Team at EPFL
+;; Copyright (C) 2009-2011 Scala Dev Team at EPFL
 ;; Authors: See AUTHORS file
 ;; Keywords: scala languages oop
 
 ;;; License
 
 ;; SCALA LICENSE
-;;
-;; Copyright (c) 2002-2010 EPFL, Lausanne, unless otherwise specified.
+;;  
+;; Copyright (c) 2002-2011 EPFL, Lausanne, unless otherwise specified.
 ;; All rights reserved.
-;;
+;;  
 ;; This software was developed by the Programming Methods Laboratory of the
 ;; Swiss Federal Institute of Technology (EPFL), Lausanne, Switzerland.
-;;
+;;  
 ;; Permission to use, copy, modify, and distribute this software in source
 ;; or binary form for any purpose with or without fee is hereby granted,
 ;; provided that the following conditions are met:
-;;
+;;  
 ;;    1. Redistributions of source code must retain the above copyright
 ;;       notice, this list of conditions and the following disclaimer.
-;;
+;;  
 ;;    2. Redistributions in binary form must reproduce the above copyright
 ;;       notice, this list of conditions and the following disclaimer in the
 ;;       documentation and/or other materials provided with the distribution.
-;;
+;;  
 ;;    3. Neither the name of the EPFL nor the names of its contributors
 ;;       may be used to endorse or promote products derived from this
 ;;       software without specific prior written permission.
-;;
-;;
+;;  
+;;  
 ;; THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
 ;; ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ;; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -42,15 +43,16 @@
 ;; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 ;; SUCH DAMAGE.
 
-;;; Commentary:
-;;
+;;; Code
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; Code:
+(provide 'scala-mode-indent)
 
 (defcustom scala-mode-indent:step 2
   "Indentation step."
   :type 'integer
   :group 'scala)
+
 
 (defun scala-parse-partial-sexp ()
   (parse-partial-sexp (point-min) (point)))
@@ -84,6 +86,7 @@
 	   (eq (get-text-property (point) 'face) 'font-lock-comment-face))
     nil))
 
+
 (defun scala-in-string-p ()
   "Return t iff the point is inside a string."
   (if font-lock-mode
@@ -107,7 +110,7 @@
         0)))
 
 (defun scala-comment-indentation ()
-  "Return suggested indentation inside of a comment."
+  ;; Return suggested indentation inside of a comment.
   (forward-line -1)
   (beginning-of-line)
   (skip-syntax-forward " ")
@@ -128,8 +131,8 @@
       (current-column))))
 
 (defun scala-indentation-from-following ()
-  "Suggest indentation based on the following part of the current expression.
-Return nil if indentation cannot be guessed."
+  ;; Return suggested indentation based on the following part of the
+  ;; current expression. Return nil if indentation cannot be guessed.
   (save-excursion
     (scala-forward-spaces (scala-point-after (end-of-line)))
     (cond
@@ -149,8 +152,8 @@ Return nil if indentation cannot be guessed."
       (current-column)))))
 
 (defun scala-indentation-from-preceding ()
-  "Suggest indentation based on the preceding part of the current expression.
-Return nil if indentation cannot be guessed."
+  ;; Return suggested indentation based on the preceding part of the
+  ;; current expression. Return nil if indentation cannot be guessed.
   (save-excursion
     (scala-backward-spaces)
     (and (not (bobp))
@@ -163,8 +166,9 @@ Return nil if indentation cannot be guessed."
 	     (scala-looking-at-backward scala-expr-start-re)))
 	 (+ (current-indentation) scala-mode-indent:step))))
 
+
 (defun scala-indentation-from-block ()
-  "Return suggested indentation based on the current block."
+  ;; Return suggested indentation based on the current block.
   (save-excursion
     (let* ((state (scala-parse-partial-sexp))
            (block-start (nth 1 state)))
@@ -189,7 +193,7 @@ When called repeatedly, indent each time one stop further on the right."
   (if (or (eq last-command this-command)
           (eq last-command 'scala-undent-line))
       (scala-indent-line-to (+ (current-indentation) scala-mode-indent:step))
-    (let
+    (let 
 	((indentation (scala-indentation)))
       (scala-indent-line-to indentation))))
 
@@ -218,11 +222,7 @@ When called repeatedly, indent each time one stop further on the right."
 (defun scala-newline ()
   (interactive)
   (if (scala-in-multi-line-comment-p)
-      (progn
+      (progn 
 	(newline-and-indent)
 	(insert "* "))
     (newline)))
-
-(provide 'scala-mode-indent)
-
-;;; scala-mode-indent.el ends here
